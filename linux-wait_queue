@@ -1,0 +1,23 @@
+/*
+  下面仔细欣赏 等待队列在Linux Kernel中的实现
+  
+   一: 进程的状态与等待队列
+   等待队列上是一组休眠状态的进程
+*/
+/*
+   等待队列头
+*/
+struct __wait_queue_head
+{
+   /*
+      这里用到了一把自旋锁，对链表插入(有睡眠进程进来了)、删除(该进程要被唤醒了)等操作进行互斥操作 
+   */
+   spinlock_t lock;
+   /*
+      链接成双向循环链表，在下面我们模拟的等待队列 是用单链表来实现的
+   */
+   struct list_head task_list;
+};
+typedef struct _wait_queue_head wait_queue_head_t;
+
+
